@@ -1,37 +1,20 @@
-name : Deploy to staging
+name: Deploy to staging
 on:
   push:
-    branches:
-      - "main"
+    branches: [ main ]
 
 jobs:
   redeploy_everything:
-   runs-on: ubuntu-latest
-   name: Deploying everything to the staging cluster
-   steps:
-    - run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
-        chmod 600 ~/ssh_key
-
-        ssh -i ~/ssh_key -o StrictHostKeyChecking=no root@64.227.147.124 -t << 'EOF'
-          cd week-25-ci-next-app/
-          git pull origin main
-          export PATH=/root/.nvm/versions/node/v22.13.1/bin:$PATH
-          npm install -g pnpm
-          pnpm install
-          pnpm run build
-          pm2 restart fe-sever
-          pm2 restart http-sever
-          pm2 restart ws-sever
-        EOF
+    runs-on: ubuntu-latest
+    name: Deploying everything to the staging cluster
+    steps:
+      - run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+          chmod 700 /home/runner/ssh_key
+          ssh -i ~/ssh_key root@64.227.147.124 -o StrictHostKeyChecking=no -t "cd week-25-ci-next-app/ && git pull origin main && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart fe-sever && pm2 restart http-sever && pm2 restart ws-sever"
 
 
-   
-
-  #  - run: | 
-  #        echo "${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
-  #        ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150
-  #        cd week-25-ci-next-app/ && git pull
-  #        pnpm install
-  #        pnpm run build
-  #        pm2 restart all
+  #           mkdir -p /home/runner/.ssh
+  # ls /home/runner/.ssh
+  # touch /home/runner/.ssh/known_hosts
+  # echo "${{ secrets.KNOWN_HOSTS }}" &> /home/runner/.ssh/known_hosts
