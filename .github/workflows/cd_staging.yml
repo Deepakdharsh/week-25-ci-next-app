@@ -9,17 +9,21 @@ jobs:
    runs-on: ubuntu-latest
    name: Deploying everything to the staging cluster
    steps:
-   - run: |
-      echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
-      chmod 600 ~/ssh_key
-      ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150 << 'EOF'
-        cd week-25-ci-next-app/
-        git pull
-        npm install -g pnpm
-        pnpm install
-        pnpm run build
-        pm2 restart all
-      EOF
+    - run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+        chmod 600 ~/ssh_key
+
+        ssh -i ~/ssh_key -o StrictHostKeyChecking=no root@64.227.147.124 -t << 'EOF'
+          cd week-25-ci-next-app/
+          git pull origin main
+          export PATH=/root/.nvm/versions/node/v22.13.1/bin:$PATH
+          npm install -g pnpm
+          pnpm install
+          pnpm run build
+          pm2 restart fe-sever
+          pm2 restart http-sever
+          pm2 restart ws-sever
+        EOF
 
 
    
