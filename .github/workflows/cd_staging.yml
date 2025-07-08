@@ -9,12 +9,24 @@ jobs:
    runs-on: ubuntu-latest
    name: Deploying everything to the staging cluster
    steps:
-   - run: | 
-         echo "${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
-         ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150
-         cd week-25-ci-next-app/ && git pull
-         pnpm install
-         pnpm run build
-         pm2 restart all
+   - run: |
+      echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+      chmod 600 ~/ssh_key
+      ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150 << 'EOF'
+        cd week-25-ci-next-app/
+        git pull
+        pnpm install
+        pnpm run build
+        pm2 restart all
+      EOF
+
 
    
+
+  #  - run: | 
+  #        echo "${{secrets.SSH_PRIVATE_KEY}}" &> ~/ssh_key
+  #        ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150
+  #        cd week-25-ci-next-app/ && git pull
+  #        pnpm install
+  #        pnpm run build
+  #        pm2 restart all
