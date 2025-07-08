@@ -15,6 +15,7 @@ jobs:
       ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@65.1.110.150 << 'EOF'
         cd week-25-ci-next-app/
         git pull
+        npm install -g pnpm
         pnpm install
         pnpm run build
         pm2 restart all
