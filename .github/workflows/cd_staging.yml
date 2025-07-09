@@ -15,4 +15,4 @@ jobs:
           touch /home/runner/.ssh/known_hosts
           echo "${{ secrets.KNOWN_HOSTS }}" &> /home/runner/.ssh/known_hosts
           chmod 700 /home/runner/ssh_key
-          ssh -i ~/ssh_key ubuntu@13.127.240.28 -t "cd week-25-ci-next-app/ && git stash && git pull origin main && export PATH=/home/ubuntu/.nvm/versions/node/v22.17.0/bin && npm install -g pnpm  && pnpm install && npm install && pnpm turbo build && pm2 restart web-server && pm2 restart http-server && pm2 restart ws-server" 
+          ssh -i ~/ssh_key ubuntu@13.127.240.28 -t "cd week-25-ci-next-app/ && git stash && git pull origin main && export PATH=/home/ubuntu/.nvm/versions/node/v22.17.0/bin && npm install -g pnpm  && pnpm install && npm install && pnpm turbo build && pm2 restart web-server && pm2 restart http-server && pm2 restart ws-server"  
